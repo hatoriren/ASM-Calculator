@@ -1,7 +1,7 @@
 format PE64 console
 entry start
 
-include 'win64ax.inc'              ; ??????????? ? ???????
+include 'win64ax.inc'            
 
 section '.text' code readable executable
 
@@ -26,12 +26,12 @@ start:
     jz division_error
 
 division_loop:
-    cmp rax, rcx   ; Compare a with b
+    cmp rax, rcx   
     jb division_done
-    push rcx       ; Зберегти rcx перед викликом subtract
-    call subtract  ; Викликати функцію subtract для віднімання rcx з rax
-    pop rcx        ; Відновити rcx після виклику subtract
-    inc rdx        ; Increment result counter in rdx
+    push rcx       
+    call subtract  
+    pop rcx        
+    inc rdx        
     jmp division_loop
 
 
@@ -40,10 +40,10 @@ division_done:
     mov [r], rax   ; Store remainder in variable r
 
     ; Add c to quotient using adc instead of add
-    mov rax, [q]   ; Load quotient into rax
-    mov rcx, [c]   ; Load c into rcx
+    mov rax, [q]   
+    mov rcx, [c]   
     clc            ; Clear carry flag
-    adc rax, rcx   ; Add c to quotient using adc
+    adc rax, rcx   
 
     mov [result], rax
     cinvoke printf, <"wyn = %llx",10,13>, [result]
@@ -57,14 +57,14 @@ end_program:
     invoke ExitProcess,0
 
 subtract:
-    push rcx           ; Зберігаємо rcx
-    not rcx            ; Застосувати NOT до rcx, отримуючи ~b
-    clc                ; Очищуємо прапорець переносу
-    adc rcx, 1         ; Додати 1 до ~b, формуючи -b (доповнення до двійки) з врахуванням прапорця переносу
-    clc                ; Знову очищуємо прапорець переносу для наступної операції adc
-    adc rax, rcx       ; Додати -b до a з врахуванням прапорця переносу
-    pop rcx            ; Відновити rcx
-    ret                ; Повернутися з функції
+    push rcx          
+    not rcx            
+    clc                
+    adc rcx, 1        
+    clc               
+    adc rax, rcx       
+    pop rcx           
+    ret                
 section '.data' data readable writeable
     a dq 0
     b dq 0
